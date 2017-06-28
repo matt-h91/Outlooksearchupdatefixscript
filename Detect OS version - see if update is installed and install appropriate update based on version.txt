@@ -1,0 +1,56 @@
+@echo off
+
+systeminfo | find ": KB4022168"
+if errorlevel = 1 goto Win7
+if errorlevel = 0 goto find1
+
+:find1
+systeminfo | find ": KB4022720"
+if errorlevel = 1 goto Win8.1
+if errorlevel = 0 goto find2
+
+:find2
+systeminfo | find ": KB4022716"
+if errorlevel = 1 goto Win10
+if errorlevel = 0 goto next
+
+
+
+:next
+ver | find "6.1"
+if errorlevel = 1 goto next1
+if errorlevel = 0 goto win7
+ 
+:next1
+ver | find "6.3" > nul
+if errorlevel = 1 goto next2
+if errorlevel = 0 goto win8.1
+ 
+:next2
+ver | find "6.3" > nul
+if errorlevel = 1 goto next3
+if errorlevel = 0 goto win8.1
+ 
+:next3
+ver | find "10.0" > nul
+if errorlevel = 1 goto other
+if errorlevel = 0 goto win10
+ 
+:win7
+echo Win7
+wusa.exe \\path\to\files\windows6.1-kb4022168-x64_1d69279af440d9fa7faa87df1eda7c55fc31f260.msu /quiet
+pause
+ 
+:win8.1
+echo Win8.1
+wusa.exe \\path\to\files\WindowsUpdates\windows8.1-kb4022720-x64_0da04eeab7f676e6b3f3a00aeab20b183e0f3dff.msu /quiet
+pause
+ 
+:win10
+echo Win10
+wusa.exe \\path\to\files\windows10.0-kb4022716-x64_72cab17aeb72f4e36df375505ba7325c90044119.msu /quiet
+pause
+
+:installed
+echo installed
+pause
